@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="css/ionicons.min.css">
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/Toast.css">
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -38,6 +40,7 @@
                     <li class="nav-item"><a href="#groom-bride-section" class="nav-link"><span>About Us</span></a></li>
                     <li class="nav-item"><a href="#lovestory-section" class="nav-link"><span>Love Story</span></a></li>
                     <li class="nav-item"><a href="#gallery-section" class="nav-link"><span>Gallery</span></a></li>
+                    <li class="nav-item"><a href="#calendar-section" class="nav-link"><span>Calendar</span></a></li>
                 </ul>
             </div>
         </div>
@@ -279,6 +282,35 @@
             </div>
         </div>
     </section>
+
+    <section class="ftco-section" id="calendar-section">
+        <div class="container">
+            <div class="row justify-content-center pb-5">
+                <div class="col-md-12 text-center heading-section ftco-animate">
+                    <span class="clone">Calendar</span>
+                    <h2 class="mb-3">Calendar</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="menu">
+                        <span id="menu-navi">
+                            <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+                            <button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+                                <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+                                <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+                            </button>
+                        </span>
+                        <span id="renderRange" class="render-range"></span>
+                    </div>
+                    
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
     
     <footer class="ftco-footer ftco-section">
         <div class="overlay"></div>
@@ -289,9 +321,8 @@
                         <h2 class="ftco-heading-2">Count Day</h2>
                         <p>Người yêu tôi mỗi lúc ngủ thường đi ra ngoài ngõ ???.</p>
                         <ul class="ftco-footer-social list-unstyled mt-5">
-                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                            <li class="ftco-animate"><a href="https://www.facebook.com/pyl.walker/" target="_blank"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="https://www.instagram.com/_pylw/"><span class="icon-instagram"></span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -302,8 +333,8 @@
                         <div class="block-23 mb-3">
                             <ul>
                                 <li><span class="icon icon-map-marker"></span><span class="text">14 ,20/14 Ho Tung Mau St , Cau Giay, Ha Noi, VN</span></li>
-                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+84 918 516 036</span></a></li>
-                                <li><a href="#"><span class="icon icon-envelope pr-4"></span><span class="text">something.tieumomo@gmail.com</span></a></li>
+                                <li><a href="javascript:void(0);" id="linkPhoneNumber"><span class="icon icon-phone"></span><span class="text" id="phoneNumber">+84 918 516 036</span></a></li>
+                                <li><a href="javascript:void(0);" id="linkEmail"><span class="icon icon-envelope pr-4"></span><span class="text" id="email">code.tieumomo@gmail.com</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -336,8 +367,82 @@
     <script src="js/jquery.animateNumber.min.js"></script>
     <script src="js/jquery.mb.YTPlayer.min.js"></script>
     <script src="js/scrollax.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="js/google-map.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/Toast.js"></script>
+    <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+    <script>
+        $(document).ready(function() {
+            //Copy phone number and email
+            $("#linkPhoneNumber").on("click", function() {
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val($("#phoneNumber").html()).select();
+                document.execCommand("copy");
+                $temp.remove();
+
+                new Toast({
+                    message: 'Copied phone number to clipboard 💚',
+                    type: 'success'
+                });
+            });
+
+            $("#linkEmail").on("click", function() {
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val($("#email").html()).select();
+                document.execCommand("copy");
+                $temp.remove();
+
+                new Toast({
+                    message: 'Copied email to clipboard 💚',
+                    type: 'success'
+                });
+            });
+
+            //Calendar
+            var Calendar = tui.Calendar;
+            var calendar = new Calendar('#calendar', {
+                defaultView: 'month',
+                taskView: true,
+                template: {
+                    monthDayname: function(dayname) {
+                        return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
+                    }
+                    
+                }
+            });
+            $(".move-today").remove();
+            $(".move-day").remove();
+
+            calendar.createSchedules([
+                {
+                    id: '1',
+                    calendarId: '1',
+                    title: 'Women\'s Day',
+                    category: 'time',
+                    dueDateClass: '',
+                    start: '2021-03-08T09:00:00+09:00',
+                    end: '2021-03-08T10:00:00+09:00',
+                    bgColor: 'red',
+                    color: 'white'
+                },
+                {
+                    id: '2',
+                    calendarId: '1',
+                    title: 'Anniversary',
+                    category: 'time',
+                    dueDateClass: '',
+                    start: '2021-03-13T17:30:00+09:00',
+                    end: '2021-03-13T17:31:00+09:00',
+                    isReadOnly: true,
+                    bgColor: 'red',
+                    color: 'white'
+                }
+            ]);
+        });
+    </script>
 </body>
 </html>
